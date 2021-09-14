@@ -6,9 +6,9 @@ class DefaultConfig(object):
     env = 'default'  # visdom 环境
     vis_port =8097 # visdom 端口
     model = 'OpenTag2019'  # 使用的模型，名字必须与models/__init__.py中的名字一致
-    pretrained_bert_name = 'bert-base-chinese'
+    pretrained_bert_name = 'bert-base-uncased'
 
-    pickle_path = './data/中文品牌_适用季节.pkl'
+    pickle_path = './data/top105_att.pkl'
     load_model_path = None  # 加载预训练的模型的路径，为None代表不加载
 
     batch_size = 32  # batch size

@@ -174,7 +174,7 @@ def rawdata2pkl4nobert(path):
 
 
 def rawdata2pkl4bert(path, att_list):
-    tokenizer = BertTokenizer.from_pretrained('bert-base-chinese')
+    tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
     with open(path, 'r') as f:
         lines = f.readlines()
         for att_name in tqdm(att_list):
@@ -186,7 +186,7 @@ def rawdata2pkl4bert(path, att_list):
             for index, line in enumerate(lines):
                 line = line.strip('\n')
                 if line:
-                    title, attribute, value = line.split('<$$$>')
+                    title, attribute, value = line.split('\x01')
                     if attribute in [att_name] and value in title: #and _is_chinese_char(ord(value[0])):
                         title, attribute, value, tag = bert4token(tokenizer, title, attribute, value)
                         titles.append(title)
@@ -228,8 +228,8 @@ def rawdata2pkl4bert(path, att_list):
                 test_y = np.asarray(list(test['y'].values))
 
                 att_name = att_name.replace('/','_')
-                with open('../data/all/{}.pkl'.format(att_name), 'wb') as outp:
-                # with open('../data/top105_att.pkl', 'wb') as outp:
+                #with open('../data/all/{}.pkl'.format(att_name), 'wb') as outp:
+                with open('../data/top105_att.pkl', 'wb') as outp:
                     pickle.dump(train_x, outp)
                     pickle.dump(train_att, outp)
                     pickle.dump(train_y, outp)
@@ -247,15 +247,17 @@ def get_attributes(path):
         for line in f.readlines():
             line = line.strip('\n')
             if line:
-                title, attribute, value = line.split('<$$$>')
+                title, attribute, value = line.split('\x01')
                 atts.append(attribute)
     return [item[0] for item in Counter(atts).most_common()]
+
 
 
 if __name__=='__main__':
     TAGS = {'':0,'B':1,'I':2,'O':3}
     id2tags = {v:k for k,v in TAGS.items()}
-    path = '../data/raw.txt'
+    path = '../data/english.txt'
     att_list = get_attributes(path)
-    # rawdata2pkl4bert(path, att_list)
-    rawdata2pkl4nobert(path)
+    print(att_list)
+    rawdata2pkl4bert(path, att_list)
+    #rawdata2pkl4nobert(path)

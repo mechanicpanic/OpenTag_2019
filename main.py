@@ -19,13 +19,13 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 logger.addHandler(logging.StreamHandler(sys.stdout))
 
-def get_attributes(path='./data/raw.txt'):
+def get_attributes(path='./data/english.txt'):
     atts = []
     with open(path, 'r') as f:
         for line in f.readlines():
             line = line.strip('\n')
             if line:
-                title, attribute, value = line.split('<$$$>')
+                title, attribute, value = line.split('\x01')
                 atts.append(attribute)
     return [item[0] for item in Counter(atts).most_common()]
 
